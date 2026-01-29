@@ -1,6 +1,18 @@
 import { MaintenanceConfig, MonitorTarget } from '@/types/config'
-import { Center, Container, Title, Collapse, Button, Box } from '@mantine/core'
-import { IconCircleCheck, IconAlertCircle, IconPlus, IconMinus } from '@tabler/icons-react'
+import {
+  Container,
+  Title,
+  Collapse,
+  Card,
+  Stack,
+  ThemeIcon,
+  Text,
+  Group,
+  RingProgress,
+  Center,
+  Box,
+} from '@mantine/core'
+import { IconCheck, IconX, IconAlertCircle, IconActivity } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 import MaintenanceAlert from './MaintenanceAlert'
 import { pageConfig } from '@/uptime.config'
@@ -30,19 +42,26 @@ export default function OverallStatus({
   let groupedMonitor = (group && Object.keys(group).length > 0) || false
 
   let statusString = ''
-  let icon = <IconAlertCircle style={{ width: 64, height: 64, color: '#b91c1c' }} />
+  let statusColor = 'gray'
+  let StatusIcon = IconAlertCircle
+
   if (state.overallUp === 0 && state.overallDown === 0) {
     statusString = t('No data yet')
+    statusColor = 'gray'
   } else if (state.overallUp === 0) {
     statusString = t('All systems not operational')
+    statusColor = 'red'
+    StatusIcon = IconX
   } else if (state.overallDown === 0) {
     statusString = t('All systems operational')
-    icon = <IconCircleCheck style={{ width: 64, height: 64, color: '#059669' }} />
+    statusColor = 'teal'
+    StatusIcon = IconCheck
   } else {
     statusString = t('Some systems not operational', {
       down: state.overallDown,
       total: state.overallUp + state.overallDown,
     })
+    statusColor = 'yellow'
   }
 
   const [openTime] = useState(Math.round(Date.now() / 1000))
@@ -87,21 +106,64 @@ export default function OverallStatus({
 
   return (
     <Container size="md" mt="xl">
-      <Center>{icon}</Center>
-      <Title mt="sm" style={{ textAlign: 'center' }} order={1}>
-        {statusString}
-      </Title>
-      <Title mt="sm" style={{ textAlign: 'center', color: '#70778c' }} order={5}>
-        {t('Last updated on', {
-          date: new Date(state.lastUpdate * 1000).toLocaleString(),
-          seconds: currentTime - state.lastUpdate,
-        })}
-      </Title>
+      <Card
+        padding="xl"
+        radius="lg"
+        withBorder
+        style={{
+          overflow: 'visible',
+          background: `linear-gradient(145deg, var(--mantine-color-body), var(--mantine-color-${statusColor}-light))`,
+        }}
+      >
+        <Group justify="space-between" align="center">
+          <Group>
+            <ThemeIcon
+              color={statusColor}
+              size={60}
+              radius="xl"
+              variant="light"
+              style={{ boxShadow: `0 0 20px var(--mantine-color-${statusColor}-3)` }}
+            >
+              <StatusIcon size={36} stroke={2} />
+            </ThemeIcon>
+
+            <Stack gap={4}>
+              <Title order={2} style={{ fontWeight: 800 }}>
+                {statusString}
+              </Title>
+              <Group gap={6}>
+                <IconActivity size={16} style={{ opacity: 0.5 }} />
+                <Text c="dimmed" size="sm">
+                  {t('Last updated: {{time}}', {
+                    time: new Date(state.lastUpdate * 1000).toLocaleString(),
+                  })}
+                </Text>
+              </Group>
+            </Stack>
+          </Group>
+
+          <Box visibleFrom="sm">
+            <RingProgress
+              size={80}
+              thickness={8}
+              roundCaps
+              sections={[{ value: 100, color: statusColor }]}
+              label={
+                <Center>
+                  <ThemeIcon color={statusColor} variant="transparent" radius="xl">
+                    <StatusIcon size={24} />
+                  </ThemeIcon>
+                </Center>
+              }
+            />
+          </Box>
+        </Group>
+      </Card>
 
       {/* Upcoming Maintenance */}
       {upcomingMaintenances.length > 0 && (
         <>
-          <Title mt="4px" style={{ textAlign: 'center', color: '#70778c' }} order={5}>
+          <Title mt="lg" style={{ textAlign: 'center', color: '#70778c' }} order={5}>
             {t('upcoming maintenance', { count: upcomingMaintenances.length })}{' '}
             <span
               style={{ textDecoration: 'underline', cursor: 'pointer' }}

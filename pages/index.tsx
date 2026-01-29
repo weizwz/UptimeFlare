@@ -6,7 +6,7 @@ import { maintenances, pageConfig, workerConfig } from '@/uptime.config'
 import OverallStatus from '@/components/OverallStatus'
 import Header from '@/components/Header'
 import MonitorList from '@/components/MonitorList'
-import { Center, Text } from '@mantine/core'
+import { Center, Container, Text } from '@mantine/core'
 import MonitorDetail from '@/components/MonitorDetail'
 import Footer from '@/components/Footer'
 import { useTranslation } from 'react-i18next'
@@ -48,19 +48,21 @@ export default function Home({
         <link rel="icon" href={pageConfig.favicon ?? '/favicon.png'} />
       </Head>
 
-      <main className={inter.className}>
+      <main className={inter.className} style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
         <Header />
 
-        {state.lastUpdate === 0 ? (
-          <Center>
-            <Text fw={700}>{t('Monitor State not defined')}</Text>
-          </Center>
-        ) : (
-          <div>
-            <OverallStatus state={state} monitors={monitors} maintenances={maintenances} />
-            <MonitorList monitors={monitors} state={state} />
-          </div>
-        )}
+        <Container size="lg" pb="xl">
+          {state.lastUpdate === 0 ? (
+            <Center>
+              <Text fw={700}>{t('Monitor State not defined')}</Text>
+            </Center>
+          ) : (
+            <div>
+              <OverallStatus state={state} monitors={monitors} maintenances={maintenances} />
+              <MonitorList monitors={monitors} state={state} />
+            </div>
+          )}
+        </Container>
 
         <Footer />
       </main>

@@ -1,15 +1,27 @@
 import Head from 'next/head'
-
 import { Inter } from 'next/font/google'
 import { MaintenanceConfig, MonitorTarget } from '@/types/config'
 import { maintenances, pageConfig, workerConfig } from '@/uptime.config'
 import Header from '@/components/Header'
-import { Box, Button, Center, Container, Group, Select } from '@mantine/core'
+import {
+  Box,
+  Button,
+  Center,
+  Container,
+  Group,
+  Select,
+  Title,
+  Stack,
+  Card,
+  ActionIcon,
+  Text,
+} from '@mantine/core'
 import Footer from '@/components/Footer'
 import { useEffect, useState } from 'react'
 import MaintenanceAlert from '@/components/MaintenanceAlert'
 import NoIncidentsAlert from '@/components/NoIncidents'
 import { useTranslation } from 'react-i18next'
+import { IconChevronLeft, IconChevronRight, IconCalendar, IconFilter } from '@tabler/icons-react'
 
 export const runtime = 'experimental-edge'
 const inter = Inter({ subsets: ['latin'] })
@@ -72,7 +84,7 @@ export default function IncidentsPage() {
   const { prev, next } = getPrevNextMonth(selectedMonth)
 
   const monitorOptions = [
-    { value: '', label: t('All') },
+    { value: '', label: t('All Monitors') },
     ...workerConfig.monitors.map((monitor) => ({
       value: monitor.id,
       label: monitor.name,
@@ -82,50 +94,75 @@ export default function IncidentsPage() {
   return (
     <>
       <Head>
-        <title>{pageConfig.title}</title>
+        <title>
+          {t('Incidents')} - {pageConfig.title}
+        </title>
         <link rel="icon" href={pageConfig.favicon ?? '/favicon.png'} />
       </Head>
 
-      <main className={inter.className}>
-        <Header
-          style={{
-            marginBottom: '40px',
-          }}
-        />
-        <Center>
-          <Container size="md" style={{ width: '100%' }}>
-            <Group justify="end" mb="md">
+      <main className={inter.className} style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+        <Header />
+
+        <Container size="md" pb="xl" style={{ minHeight: '60vh' }}>
+          <Stack gap="lg">
+            <Group justify="space-between" align="center">
+              <Title order={2} size="h1" fw={800}>
+                {t('Incident History')}
+              </Title>
+
               <Select
-                placeholder={t('Select monitor')}
+                placeholder={t('Filter by monitor')}
                 data={monitorOptions}
                 value={selectedMonitor}
                 onChange={setSelectedMonitor}
                 clearable
-                style={{ maxWidth: 300, float: 'right' }}
+                leftSection={<IconFilter size={16} />}
+                style={{ width: 250 }}
+                radius="md"
               />
             </Group>
-            <Box>
-              {monitorFilteredIncidents.length === 0 ? (
-                <NoIncidentsAlert />
-              ) : (
-                monitorFilteredIncidents.map((incident, i) => (
-                  <MaintenanceAlert key={i} maintenance={incident} />
-                ))
-              )}
-            </Box>
-            <Group justify="space-between" mt="md">
-              <Button variant="default" onClick={() => (window.location.hash = prev)}>
-                {t('Backwards')}
-              </Button>
-              <Box style={{ alignSelf: 'center', fontWeight: 500, fontSize: 18 }}>
-                {selectedMonth}
-              </Box>
-              <Button variant="default" onClick={() => (window.location.hash = next)}>
-                {t('Forward')}
-              </Button>
-            </Group>
-          </Container>
-        </Center>
+
+            <Card padding="lg" radius="lg" withBorder>
+              <Group justify="space-between" mb="xl">
+                <Button
+                  variant="subtle"
+                  leftSection={<IconChevronLeft size={18} />}
+                  onClick={() => (window.location.hash = prev)}
+                  color="gray"
+                >
+                  {t('Previous')}
+                </Button>
+
+                <Group gap="xs">
+                  <IconCalendar size={20} style={{ opacity: 0.5 }} />
+                  <Text fw={700} size="xl">
+                    {selectedMonth}
+                  </Text>
+                </Group>
+
+                <Button
+                  variant="subtle"
+                  rightSection={<IconChevronRight size={18} />}
+                  onClick={() => (window.location.hash = next)}
+                  color="gray"
+                >
+                  {t('Next')}
+                </Button>
+              </Group>
+
+              <Stack gap="md">
+                {monitorFilteredIncidents.length === 0 ? (
+                  <NoIncidentsAlert />
+                ) : (
+                  monitorFilteredIncidents.map((incident, i) => (
+                    <MaintenanceAlert key={i} maintenance={incident} />
+                  ))
+                )}
+              </Stack>
+            </Card>
+          </Stack>
+        </Container>
+
         <Footer />
       </main>
     </>

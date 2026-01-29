@@ -7,7 +7,7 @@ import { MaintenanceConfig, PageConfig, WorkerConfig } from './types/config'
 
 const pageConfig: PageConfig = {
   // Title for your status page
-  title: 'weizwz 的状态页',
+  title: 'WeizStatus',
   // Links shown at the header of your status page, could set `highlight` to `true`
   links: [
     { link: 'https://www.weizwz.com/', label: '主页' },
@@ -63,6 +63,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      group: '基础服务',
     },
     {
       id: 'blog',
@@ -73,6 +74,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      group: '基础服务',
     },
     {
       id: 'nav',
@@ -83,6 +85,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      group: '实用工具',
     },
     {
       id: 'cover',
@@ -93,6 +96,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      group: '实用工具',
     },
     {
       id: 'fun_animation',
@@ -103,6 +107,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      group: '演示项目',
     },
     {
       id: 'charts',
@@ -113,6 +118,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      group: '演示项目',
     },
   ],
   notification: {

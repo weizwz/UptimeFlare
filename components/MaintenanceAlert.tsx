@@ -1,6 +1,6 @@
-import { Alert, List, Text, useMantineTheme } from '@mantine/core'
+import { Alert, List, Text, useMantineTheme, ThemeIcon, Group, Stack, Badge } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks'
-import { IconAlertTriangle } from '@tabler/icons-react'
+import { IconAlertTriangle, IconCalendar, IconClock } from '@tabler/icons-react'
 import { MaintenanceConfig, MonitorTarget } from '@/types/config'
 import { pageConfig } from '@/uptime.config'
 import { useTranslation } from 'react-i18next'
@@ -18,78 +18,66 @@ export default function MaintenanceAlert({
   const theme = useMantineTheme()
   const isDesktop = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`)
 
+  const color = upcoming
+    ? pageConfig.maintenances?.upcomingColor ?? 'gray'
+    : maintenance.color || 'yellow'
+
   return (
     <Alert
-      icon={<IconAlertTriangle />}
+      variant="light"
+      color={color}
       title={
-        <span
-          style={{
-            fontSize: '1rem',
-            fontWeight: 700,
-          }}
-        >
-          {(upcoming ? t('Upcoming') : '') + (maintenance.title || t('Scheduled Maintenance'))}
-        </span>
-      }
-      color={
-        upcoming ? pageConfig.maintenances?.upcomingColor ?? 'gray' : maintenance.color || 'yellow'
+        <Group gap="xs" align="center">
+          <ThemeIcon color={color} variant="light" radius="md">
+            <IconAlertTriangle size={18} />
+          </ThemeIcon>
+          <Text fw={700} size="lg">
+            {(upcoming ? t('Upcoming') : '') + (maintenance.title || t('Scheduled Maintenance'))}
+          </Text>
+        </Group>
       }
       withCloseButton={false}
-      style={{ margin: '16px auto 0 auto', ...style }}
+      style={{ margin: '16px auto 0 auto', borderRadius: 'var(--mantine-radius-lg)', ...style }}
     >
-      {/* Date range in top right (desktop) or inline (mobile) */}
-      <div
-        style={{
-          ...{
-            top: 10,
-            fontSize: '0.85rem',
-            borderRadius: 6,
-          },
-          ...(isDesktop
-            ? {
-                position: 'absolute',
-                right: 10,
-                padding: '2px 8px',
-                textAlign: 'right',
-              }
-            : { marginBottom: 4 }),
-        }}
-      >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'auto 1fr',
-            gridColumnGap: '3px',
-          }}
-        >
-          <div style={{ textAlign: 'right', fontWeight: 'bold' }}>
-            {upcoming ? t('Scheduled for') : t('From')}
-          </div>
-          <div>{new Date(maintenance.start).toLocaleString()}</div>
-          <div style={{ textAlign: 'right', fontWeight: 'bold' }}>
-            {upcoming ? t('Expected end') : t('To')}
-          </div>
-          <div>
-            {maintenance.end
-              ? new Date(maintenance.end).toLocaleString()
-              : t('Until further notice')}
-          </div>
-        </div>
-      </div>
+      <Stack gap="md" mt="xs">
+        <Group gap="xl" wrap="wrap">
+          <Group gap="xs">
+            <IconCalendar size={16} style={{ opacity: 0.7 }} />
+            <Text size="sm" fw={500}>
+              {upcoming ? t('Scheduled for') : t('From')}:{' '}
+              {new Date(maintenance.start).toLocaleString()}
+            </Text>
+          </Group>
+          <Group gap="xs">
+            <IconClock size={16} style={{ opacity: 0.7 }} />
+            <Text size="sm" fw={500}>
+              {upcoming ? t('Expected end') : t('To')}:{' '}
+              {maintenance.end
+                ? new Date(maintenance.end).toLocaleString()
+                : t('Until further notice')}
+            </Text>
+          </Group>
+        </Group>
 
-      <Text style={{ paddingTop: '3px', whiteSpace: 'pre-line' }}>{maintenance.body}</Text>
-      {maintenance.monitors && maintenance.monitors.length > 0 && (
-        <>
-          <Text mt="xs">
-            <b>{t('Affected components')}</b>
-          </Text>
-          <List size="sm" withPadding>
-            {maintenance.monitors.map((comp, compIdx) => (
-              <List.Item key={compIdx}>{comp?.name ?? t('MONITOR ID NOT FOUND')}</List.Item>
-            ))}
-          </List>
-        </>
-      )}
+        <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
+          {maintenance.body}
+        </Text>
+
+        {maintenance.monitors && maintenance.monitors.length > 0 && (
+          <Stack gap="xs">
+            <Text size="xs" fw={700} tt="uppercase" c="dimmed">
+              {t('Affected components')}
+            </Text>
+            <Group gap="xs">
+              {maintenance.monitors.map((comp, compIdx) => (
+                <Badge key={compIdx} variant="dot" color={color}>
+                  {comp?.name ?? t('MONITOR ID NOT FOUND')}
+                </Badge>
+              ))}
+            </Group>
+          </Stack>
+        )}
+      </Stack>
     </Alert>
   )
 }

@@ -1,34 +1,7 @@
-import { MonitorState, MonitorTarget } from '@/types/config'
-import { Accordion, Card, Center, Text } from '@mantine/core'
-import MonitorDetail from './MonitorDetail'
-import { pageConfig } from '@/uptime.config'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-
-function countDownCount(state: MonitorState, ids: string[]) {
-  let downCount = 0
-  for (let id of ids) {
-    if (state.incident[id] === undefined || state.incident[id].length === 0) {
-      continue
-    }
-
-    if (state.incident[id].slice(-1)[0].end === undefined) {
-      downCount++
-    }
-  }
-  return downCount
-}
-
-function getStatusTextColor(state: MonitorState, ids: string[]) {
-  let downCount = countDownCount(state, ids)
-  if (downCount === 0) {
-    return '#059669'
-  } else if (downCount === ids.length) {
-    return '#df484a'
-  } else {
-    return '#f29030'
-  }
-}
+import { MonitorTarget, MonitorState } from '@/types/config'
+import { SimpleGrid, Title, Stack, Divider, Text, Group, ThemeIcon } from '@mantine/core'
+import { IconServer } from '@tabler/icons-react'
+import MonitorCard from './MonitorCard'
 
 export default function MonitorList({
   monitors,
@@ -37,97 +10,46 @@ export default function MonitorList({
   monitors: MonitorTarget[]
   state: MonitorState
 }) {
-  const { t } = useTranslation('common')
-  const group = pageConfig.group
-  const groupedMonitor = group && Object.keys(group).length > 0
-  let content
+  // Group monitors
+  const groupedMonitors = monitors.reduce(
+    (acc, monitor) => {
+      const group = monitor.group || 'Ungrouped'
+      if (!acc[group]) acc[group] = []
+      acc[group].push(monitor)
+      return acc
+    },
+    {} as Record<string, MonitorTarget[]>
+  )
 
-  // Load expanded groups from localStorage
-  const savedExpandedGroups = localStorage.getItem('expandedGroups')
-  const expandedInitial = savedExpandedGroups
-    ? JSON.parse(savedExpandedGroups)
-    : Object.keys(group || {})
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(expandedInitial)
-  useEffect(() => {
-    localStorage.setItem('expandedGroups', JSON.stringify(expandedGroups))
-  }, [expandedGroups])
-
-  if (groupedMonitor) {
-    // Grouped monitors
-    content = (
-      <Accordion
-        multiple
-        defaultValue={Object.keys(group)}
-        variant="contained"
-        value={expandedGroups}
-        onChange={(values) => setExpandedGroups(values)}
-      >
-        {Object.keys(group).map((groupName) => (
-          <Accordion.Item key={groupName} value={groupName}>
-            <Accordion.Control>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  alignItems: 'center',
-                }}
-              >
-                <div>{groupName}</div>
-                <Text
-                  fw={500}
-                  style={{
-                    display: 'inline',
-                    paddingRight: '5px',
-                    color: getStatusTextColor(state, group[groupName]),
-                  }}
-                >
-                  {group[groupName].length - countDownCount(state, group[groupName])}/
-                  {group[groupName].length} {t('Operational')}
-                </Text>
-              </div>
-            </Accordion.Control>
-            <Accordion.Panel>
-              {monitors
-                .filter((monitor) => group[groupName].includes(monitor.id))
-                .sort((a, b) => group[groupName].indexOf(a.id) - group[groupName].indexOf(b.id))
-                .map((monitor) => (
-                  <div key={monitor.id}>
-                    <Card.Section ml="xs" mr="xs">
-                      <MonitorDetail monitor={monitor} state={state} />
-                    </Card.Section>
-                  </div>
-                ))}
-            </Accordion.Panel>
-          </Accordion.Item>
-        ))}
-      </Accordion>
-    )
-  } else {
-    // Ungrouped monitors
-    content = monitors.map((monitor) => (
-      <div key={monitor.id}>
-        <Card.Section ml="xs" mr="xs">
-          <MonitorDetail monitor={monitor} state={state} />
-        </Card.Section>
-      </div>
-    ))
-  }
+  // Sort groups: "Ungrouped" last, others alphabetical or custom order if needed
+  const sortedGroups = Object.keys(groupedMonitors).sort((a, b) => {
+    if (a === 'Ungrouped') return 1
+    if (b === 'Ungrouped') return -1
+    return a.localeCompare(b)
+  })
 
   return (
-    <Center>
-      <Card
-        shadow="sm"
-        padding="lg"
-        radius="md"
-        ml="md"
-        mr="md"
-        mt="xl"
-        withBorder={!groupedMonitor}
-        style={{ width: groupedMonitor ? '897px' : '865px' }}
-      >
-        {content}
-      </Card>
-    </Center>
+    <Stack gap={40} mt={40}>
+      {sortedGroups.map((group) => (
+        <div key={group}>
+          {group !== 'Ungrouped' && (
+            <Group mb="lg" align="center">
+              <ThemeIcon variant="light" size="lg" radius="md" color="blue">
+                <IconServer size={20} />
+              </ThemeIcon>
+              <Title order={3} size="h3" fw={800} style={{ letterSpacing: '-0.5px' }}>
+                {group}
+              </Title>
+              <Divider style={{ flex: 1 }} />
+            </Group>
+          )}
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg" verticalSpacing="lg">
+            {groupedMonitors[group].map((monitor) => (
+              <MonitorCard key={monitor.id} monitor={monitor} state={state} />
+            ))}
+          </SimpleGrid>
+        </div>
+      ))}
+    </Stack>
   )
 }

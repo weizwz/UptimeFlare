@@ -1,7 +1,8 @@
 import { MonitorState, MonitorTarget } from '@/types/config'
 import { getColor } from '@/util/color'
-import { Box, Tooltip, Modal } from '@mantine/core'
+import { Box, Tooltip, Modal, Stack, Text, Alert } from '@mantine/core'
 import { useResizeObserver } from '@mantine/hooks'
+import { IconAlertTriangle } from '@tabler/icons-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 const moment = require('moment')
@@ -78,37 +79,49 @@ export default function DetailBar({
       <Tooltip
         multiline
         key={i}
-        events={{ hover: true, focus: false, touch: true }}
+        position="top"
+        withArrow
+        transitionProps={{ transition: 'pop-bottom-left' }}
         label={
           Number.isNaN(Number(dayPercent)) ? (
             t('No Data')
           ) : (
-            <>
-              <div>
-                {t('percent at date', {
-                  percent: dayPercent,
-                  date: new Date(dayStart * 1000).toLocaleDateString(),
-                })}
-              </div>
+            <Stack gap={2} p={4}>
+              <Text size="xs" fw={700}>
+                {new Date(dayStart * 1000).toLocaleDateString()}
+              </Text>
+              <Text size="xs">
+                {t('percent at date', { percent: dayPercent, date: '' }).replace('  ', ' ')}
+              </Text>
               {dayDownTime > 0 && (
-                <div>
+                <Text size="xs" c="red.3">
                   {t('Down for', {
                     duration: moment.preciseDiff(moment(0), moment(dayDownTime * 1000)),
                   })}
-                </div>
+                </Text>
               )}
-            </>
+            </Stack>
           )
         }
       >
         <div
           style={{
-            height: '20px',
-            width: '7px',
+            height: '32px',
+            flex: 1,
             background: getColor(dayPercent, false),
-            borderRadius: '2px',
-            marginLeft: '1px',
-            marginRight: '1px',
+            borderRadius: '4px',
+            margin: '0 1px',
+            opacity: 0.8,
+            transition: 'all 0.2s ease',
+            cursor: dayDownTime > 0 ? 'pointer' : 'default',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity = '1'
+            e.currentTarget.style.transform = 'scaleY(1.1)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = '0.8'
+            e.currentTarget.style.transform = 'scaleY(1)'
           }}
           onClick={() => {
             if (dayDownTime > 0) {
@@ -119,11 +132,18 @@ export default function DetailBar({
                 })
               )
               setModelContent(
-                <>
+                <Stack>
                   {incidentReasons.map((reason, index) => (
-                    <div key={index}>{reason}</div>
+                    <Alert
+                      key={index}
+                      color="red"
+                      variant="light"
+                      icon={<IconAlertTriangle size={16} />}
+                    >
+                      {reason}
+                    </Alert>
                   ))}
-                </>
+                </Stack>
               )
               setModalOpened(true)
             }

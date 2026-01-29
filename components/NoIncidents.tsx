@@ -1,31 +1,33 @@
-import { Alert, Text } from '@mantine/core'
-import { IconInfoCircle } from '@tabler/icons-react'
+import { Alert, Text, Group, ThemeIcon } from '@mantine/core'
+import { IconCircleCheck } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 
 export default function NoIncidentsAlert({ style }: { style?: React.CSSProperties }) {
   const { t } = useTranslation('common')
   return (
     <Alert
-      icon={<IconInfoCircle />}
+      variant="light"
+      color="teal"
       title={
-        <span
-          style={{
-            fontSize: '1rem',
-            fontWeight: 700,
-          }}
-        >
-          {t('No incidents in this month')}
-        </span>
+        <Group gap="xs" align="center">
+          <ThemeIcon color="teal" variant="light" radius="md">
+            <IconCircleCheck size={18} />
+          </ThemeIcon>
+          <Text fw={700} size="lg">
+            {t('No incidents in this month')}
+          </Text>
+        </Group>
       }
-      color="gray"
       withCloseButton={false}
       style={{
-        position: 'relative',
         margin: '16px auto 0 auto',
+        borderRadius: 'var(--mantine-radius-lg)',
         ...style,
       }}
     >
-      <Text>{t('There are no incidents for this month')}</Text>
+      <Text size="sm" mt="xs" c="dimmed">
+        {t('There are no incidents for this month')}
+      </Text>
     </Alert>
   )
 }
