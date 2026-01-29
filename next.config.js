@@ -9,9 +9,9 @@ if (process.env.NODE_ENV === 'development') {
   const { setupDevBindings } = require('@cloudflare/next-on-pages/next-dev')
   setupDevBindings({
     bindings: {
-      UPTIMEFLARE_STATE: {
-        type: 'kv',
-        id: 'UPTIMEFLARE_STATE',
+      UPTIMEFLARE_D1: {
+        type: 'd1',
+        id: 'UPTIMEFLARE_D1',
       },
     },
   })
