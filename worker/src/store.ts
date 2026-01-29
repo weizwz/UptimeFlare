@@ -7,18 +7,12 @@ import {
 } from '../../types/config'
 
 export async function getFromStore(env: Env, key: string): Promise<string | null> {
-  if (!env.UPTIMEFLARE_D1 || typeof env.UPTIMEFLARE_D1.prepare !== 'function') {
-    return null
-  }
   const stmt = env.UPTIMEFLARE_D1.prepare('SELECT value FROM uptimeflare WHERE key = ?')
   const result = await stmt.bind(key).first<{ value: string }>()
   return result?.value || null
 }
 
 export async function setToStore(env: Env, key: string, value: string): Promise<void> {
-  if (!env.UPTIMEFLARE_D1 || typeof env.UPTIMEFLARE_D1.prepare !== 'function') {
-    return
-  }
   const stmt = env.UPTIMEFLARE_D1.prepare(
     'INSERT INTO uptimeflare (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value;'
   )
