@@ -14,6 +14,8 @@ const pageConfig: PageConfig = {
     { link: 'https://note.weizwz.com/', label: '博客' },
     { link: 'https://github.com/weizwz', label: 'GitHub' },
   ],
+  favicon: '/favicon.ico',
+  logo: '/logo.png',
 }
 
 const workerConfig: WorkerConfig = {
