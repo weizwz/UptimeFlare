@@ -46,7 +46,6 @@ export type MonitorTarget = {
   responseForbiddenKeyword?: string
   checkProxy?: string
   checkProxyFallback?: boolean
-  group?: string
 }
 
 export type WorkerConfig<TEnv = Env> = {

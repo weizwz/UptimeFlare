@@ -84,7 +84,7 @@ export default function IncidentsPage() {
         <title>
           {t('Incidents')} - {pageConfig.title}
         </title>
-        <link rel="icon" href={pageConfig.favicon ?? '/logo.png'} />
+        <link rel="icon" href={pageConfig.favicon ?? '/favicon.ico'} type="image/x-icon" />
       </Head>
 
       <main className={inter.className} style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>

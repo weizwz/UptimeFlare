@@ -217,7 +217,7 @@ export default function MonitorCard({
       </Modal>
       <div className="group relative p-5 flex flex-col bg-white dark:bg-zinc-900 rounded-3xl shadow-md shadow-slate-200 hover:shadow-xl hover:shadow-slate-200/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300 border border-slate-200 dark:border-zinc-800 overflow-hidden">
         {/* Preview Image Area */}
-        <div className="w-full aspect-video max-h-40 bg-white dark:bg-zinc-800 overflow-hidden mb-4">
+        <div className="w-full aspect-video max-h-32 bg-white dark:bg-zinc-800 overflow-hidden mb-4">
           <div className="relative w-full h-full overflow-hidden rounded-lg dark:bg-zinc-800">
             {monitor.preview ? (
               <Image

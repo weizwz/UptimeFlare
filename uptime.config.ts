@@ -14,8 +14,13 @@ const pageConfig: PageConfig = {
     { link: 'https://note.weizwz.com/', label: '博客' },
     { link: 'https://github.com/weizwz', label: 'GitHub' },
   ],
-  favicon: '/favicon.ico',
+  // favicon: '/favicon.ico',
   logo: '/logo.png',
+  group: {
+    基础服务: ['weiwz', 'blog', 'picture'],
+    实用工具: ['nav', 'cover'],
+    演示项目: ['fun_animation', 'charts'],
+  },
 }
 
 const workerConfig: WorkerConfig = {
@@ -66,7 +71,6 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '基础服务',
     },
     {
       id: 'blog',
@@ -78,7 +82,6 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '基础服务',
     },
     {
       id: 'picture',
@@ -88,7 +91,6 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '基础服务',
     },
     {
       id: 'nav',
@@ -100,7 +102,6 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '实用工具',
     },
     {
       id: 'cover',
@@ -112,7 +113,6 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '实用工具',
     },
     {
       id: 'fun_animation',
@@ -124,7 +124,6 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '演示项目',
     },
     {
       id: 'charts',
@@ -136,7 +135,6 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '演示项目',
     },
   ],
   notification: {

@@ -4,7 +4,7 @@ export default function Footer() {
   const links = pageConfig.links || []
 
   return (
-    <footer className="py-6 mt-12 text-center text-slate-500 text-sm">
+    <footer className="py-6 mt-16 text-center text-slate-500 text-sm">
       <div className="max-w-7xl mx-auto px-4">
         {/* Credits */}
         <div className="font-bold flex justify-center items-center gap-6 text-xs opacity-80">

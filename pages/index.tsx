@@ -65,7 +65,7 @@ export default function Home({
     <>
       <Head>
         <title>{pageConfig.title}</title>
-        <link rel="icon" href={pageConfig.favicon ?? '/logo.png'} />
+        <link rel="icon" href={pageConfig.favicon ?? '/favicon.ico'} type="image/x-icon" />
       </Head>
 
       <main className={`${inter.className} min-h-screen bg-gray-50`}>
