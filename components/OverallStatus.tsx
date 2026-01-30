@@ -1,22 +1,11 @@
 import { MaintenanceConfig, MonitorTarget } from '@/types/config'
-import {
-  Container,
-  Title,
-  Collapse,
-  Card,
-  Stack,
-  ThemeIcon,
-  Text,
-  Group,
-  RingProgress,
-  Center,
-  Box,
-} from '@mantine/core'
+import { Collapse } from '@mantine/core'
 import { IconCheck, IconX, IconAlertCircle, IconActivity } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 import MaintenanceAlert from './MaintenanceAlert'
 import { pageConfig } from '@/uptime.config'
 import { useTranslation } from 'react-i18next'
+import Image from 'next/image'
 
 function useWindowVisibility() {
   const [isVisible, setIsVisible] = useState(true)
@@ -44,24 +33,29 @@ export default function OverallStatus({
   let statusString = ''
   let statusColor = 'gray'
   let StatusIcon = IconAlertCircle
+  let heroText = 'UNKNOWN STATUS'
 
   if (state.overallUp === 0 && state.overallDown === 0) {
     statusString = t('No data yet')
-    statusColor = 'gray'
+    statusColor = 'text-gray-400'
+    heroText = 'NO DATA'
   } else if (state.overallUp === 0) {
     statusString = t('All systems not operational')
-    statusColor = 'red'
+    statusColor = 'text-red-500'
     StatusIcon = IconX
+    heroText = 'SYSTEM OUTAGE'
   } else if (state.overallDown === 0) {
     statusString = t('All systems operational')
-    statusColor = 'teal'
+    statusColor = 'text-emerald-500'
     StatusIcon = IconCheck
+    heroText = 'ALL SYSTEMS GO'
   } else {
     statusString = t('Some systems not operational', {
       down: state.overallDown,
       total: state.overallUp + state.overallDown,
     })
-    statusColor = 'yellow'
+    statusColor = 'text-yellow-500'
+    heroText = 'PARTIAL OUTAGE'
   }
 
   const [openTime] = useState(Math.round(Date.now() / 1000))
@@ -105,95 +99,66 @@ export default function OverallStatus({
     }))
 
   return (
-    <Container size="md" mt="xl">
-      <Card
-        padding="xl"
-        radius="lg"
-        withBorder
-        style={{
-          overflow: 'visible',
-          background: `linear-gradient(145deg, var(--mantine-color-body), var(--mantine-color-${statusColor}-light))`,
-        }}
-      >
-        <Group justify="space-between" align="center">
-          <Group>
-            <ThemeIcon
-              color={statusColor}
-              size={60}
-              radius="xl"
-              variant="light"
-              style={{ boxShadow: `0 0 20px var(--mantine-color-${statusColor}-3)` }}
-            >
-              <StatusIcon size={36} stroke={2} />
-            </ThemeIcon>
-
-            <Stack gap={4}>
-              <Title order={2} style={{ fontWeight: 800 }}>
-                {statusString}
-              </Title>
-              <Group gap={6}>
-                <IconActivity size={16} style={{ opacity: 0.5 }} />
-                <Text c="dimmed" size="sm">
-                  {t('Last updated: {{time}}', {
-                    time: new Date(state.lastUpdate * 1000).toLocaleString(),
-                  })}
-                </Text>
-              </Group>
-            </Stack>
-          </Group>
-
-          <Box visibleFrom="sm">
-            <RingProgress
-              size={80}
-              thickness={8}
-              roundCaps
-              sections={[{ value: 100, color: statusColor }]}
-              label={
-                <Center>
-                  <ThemeIcon color={statusColor} variant="transparent" radius="xl">
-                    <StatusIcon size={24} />
-                  </ThemeIcon>
-                </Center>
-              }
-            />
-          </Box>
-        </Group>
-      </Card>
+    <div className="py-16 text-center">
+      <div className="flex justify-center items-center gap-4 mb-4">
+        <Image
+          src="/logo.png"
+          className="w-8 h-8 md:w-14 md:h-14 group-hover:scale-105 transition-transform"
+          alt="Logo"
+          width={64}
+          height={64}
+        />
+        <h1 className="text-2xl md:text-4xl font-black tracking-tight dark:text-white bg-clip-text text-transparent bg-linear-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-400">
+          WeizWz Services Status
+        </h1>
+      </div>
+      <div className={`flex items-center justify-center gap-2 text-xl font-medium ${statusColor}`}>
+        <StatusIcon stroke={3} size={28} />
+        <span>{statusString}</span>
+      </div>
+      <div className="mt-2 flex items-center justify-center gap-2 text-sm text-gray-400">
+        <IconActivity size={14} />
+        <span>
+          {t('Last updated: {{time}}', {
+            time: new Date(state.lastUpdate * 1000).toLocaleString(),
+          })}
+        </span>
+      </div>
 
       {/* Upcoming Maintenance */}
       {upcomingMaintenances.length > 0 && (
-        <>
-          <Title mt="lg" style={{ textAlign: 'center', color: '#70778c' }} order={5}>
+        <div className="max-w-3xl mx-auto mb-8">
+          <div
+            className="text-gray-500 mb-2 cursor-pointer hover:underline"
+            onClick={() => setExpandUpcoming(!expandUpcoming)}
+          >
             {t('upcoming maintenance', { count: upcomingMaintenances.length })}{' '}
-            <span
-              style={{ textDecoration: 'underline', cursor: 'pointer' }}
-              onClick={() => setExpandUpcoming(!expandUpcoming)}
-            >
-              {expandUpcoming ? t('Hide') : t('Show')}
-            </span>
-          </Title>
+            <span>{expandUpcoming ? t('Hide') : t('Show')}</span>
+          </div>
 
           <Collapse in={expandUpcoming}>
             {upcomingMaintenances.map((maintenance, idx) => (
               <MaintenanceAlert
                 key={`upcoming-${idx}`}
                 maintenance={maintenance}
-                style={{ maxWidth: groupedMonitor ? '897px' : '865px' }}
+                style={{ marginTop: 10 }}
                 upcoming
               />
             ))}
           </Collapse>
-        </>
+        </div>
       )}
 
       {/* Active Maintenance */}
-      {activeMaintenances.map((maintenance, idx) => (
-        <MaintenanceAlert
-          key={`active-${idx}`}
-          maintenance={maintenance}
-          style={{ maxWidth: groupedMonitor ? '897px' : '865px' }}
-        />
-      ))}
-    </Container>
+      <div className="max-w-3xl mx-auto">
+        {activeMaintenances.map((maintenance, idx) => (
+          <MaintenanceAlert
+            key={`active-${idx}`}
+            maintenance={maintenance}
+            style={{ marginTop: 10 }}
+          />
+        ))}
+      </div>
+    </div>
   )
 }

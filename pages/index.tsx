@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google'
 import { MonitorTarget } from '@/types/config'
 import { maintenances, pageConfig, workerConfig } from '@/uptime.config'
 import OverallStatus from '@/components/OverallStatus'
-import Header from '@/components/Header'
 import MonitorList from '@/components/MonitorList'
 import { Center, Container, Text } from '@mantine/core'
 import MonitorDetail from '@/components/MonitorDetail'
@@ -45,24 +44,22 @@ export default function Home({
     <>
       <Head>
         <title>{pageConfig.title}</title>
-        <link rel="icon" href={pageConfig.favicon ?? '/favicon.png'} />
+        <link rel="icon" href={pageConfig.favicon ?? '/logo.png'} />
       </Head>
 
-      <main className={inter.className} style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
-        <Header />
-
-        <Container size="lg" pb="xl">
+      <main className={`${inter.className} min-h-screen bg-gray-50`}>
+        <div className="max-w-7xl mx-auto px-4">
           {state.lastUpdate === 0 ? (
             <Center>
               <Text fw={700}>{t('Monitor State not defined')}</Text>
             </Center>
           ) : (
-            <div>
+            <>
               <OverallStatus state={state} monitors={monitors} maintenances={maintenances} />
               <MonitorList monitors={monitors} state={state} />
-            </div>
+            </>
           )}
-        </Container>
+        </div>
 
         <Footer />
       </main>
@@ -85,6 +82,12 @@ export async function getServerSideProps() {
       statusPageLink: monitor?.statusPageLink ?? null,
       // @ts-ignore
       hideLatencyChart: monitor?.hideLatencyChart ?? null,
+      // @ts-ignore
+      preview: monitor?.preview ?? null,
+      // @ts-ignore
+      target: monitor?.target ?? null,
+      // @ts-ignore
+      group: monitor?.group ?? null,
     }
   })
 

@@ -1,67 +1,44 @@
-import { Container, Group, Text, Anchor, Stack, Divider } from '@mantine/core'
 import { pageConfig } from '@/uptime.config'
 
 export default function Footer() {
   const links = pageConfig.links || []
 
   return (
-    <footer style={{ marginTop: 'auto' }}>
-      <Container size="lg" py="xl">
-        <Divider mb="xl" opacity={0.5} />
-
-        <Stack align="center" gap="md">
-          {/* Navigation Links */}
-          {links.length > 0 && (
-            <Group gap="lg">
-              {links.map((link, index) => (
-                <Anchor
-                  key={index}
-                  href={link.link}
-                  target="_blank"
-                  c="dimmed"
-                  size="sm"
-                  fw={500}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    transition: 'color 0.2s ease',
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = 'var(--mantine-color-blue-6)')
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = 'var(--mantine-color-dimmed)')
-                  }
-                >
-                  {link.label}
-                </Anchor>
-              ))}
-            </Group>
-          )}
-
-          {/* Copyright & Powered By */}
-          <Stack gap={4} align="center">
-            <Text c="dimmed" size="xs">
-              &copy; {new Date().getFullYear()} {pageConfig.title || 'UptimeFlare'}
-            </Text>
-            <Group gap={4} c="dimmed" style={{ fontSize: '10px' }}>
-              <Text c="dimmed" size="xs">
-                本站使用
-              </Text>
-              <Anchor
-                href="https://github.com/lyc8503/UptimeFlare"
+    <footer className="py-6 mt-12 text-center text-slate-500 text-sm">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Credits */}
+        <div className="font-bold flex justify-center items-center gap-6 text-xs opacity-80">
+          <p>
+            &copy; {new Date().getFullYear()}{' '}
+            <span className="font-medium">
+              Services Status by &nbsp;
+              <a
+                href="https://github.com/weizwz"
                 target="_blank"
-                c="dimmed"
-                size="xs"
-                fw={700}
+                className="font-bold hover:text-emerald-500 transition-colors"
               >
-                UptimeFlare
-              </Anchor>
-            </Group>
-          </Stack>
-        </Stack>
-      </Container>
+                weizwz
+              </a>
+            </span>
+          </p>
+          <div className="flex items-center gap-1">
+            <span className="font-medium">本站使用</span>
+            <a
+              href="https://github.com/lyc8503/UptimeFlare"
+              target="_blank"
+              className="hover:text-emerald-500 transition-colors"
+            >
+              UptimeFlare
+            </a>
+          </div>
+          {pageConfig.customFooter && (
+            <div
+              dangerouslySetInnerHTML={{ __html: pageConfig.customFooter }}
+              className="mt-2 text-xs opacity-70"
+            />
+          )}
+        </div>
+      </div>
     </footer>
   )
 }

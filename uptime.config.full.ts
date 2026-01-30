@@ -18,8 +18,8 @@ const pageConfig: PageConfig = {
   },
   // [OPTIONAL] Set the path to your favicon, default to '/favicon.png' if not specified
   // favicon: 'https://example.com/favicon.ico',
-  // [OPTIONAL] Set the path to your logo, default to '/logo.svg' if not specified
-  // logo: 'https://example.com/logo.svg',
+  // [OPTIONAL] Set the path to your logo, default to '/logo.png' if not specified
+  // logo: 'https://example.com/logo.png',
   // [OPTIONAL] Maintenance related settings
   maintenances: {
     // [OPTIONAL] The color of upcoming maintenance alerts, default to 'gray'

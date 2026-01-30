@@ -2,20 +2,7 @@ import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import { MaintenanceConfig, MonitorTarget } from '@/types/config'
 import { maintenances, pageConfig, workerConfig } from '@/uptime.config'
-import Header from '@/components/Header'
-import {
-  Box,
-  Button,
-  Center,
-  Container,
-  Group,
-  Select,
-  Title,
-  Stack,
-  Card,
-  ActionIcon,
-  Text,
-} from '@mantine/core'
+import { Button, Container, Group, Select, Title, Stack, Card, Text } from '@mantine/core'
 import Footer from '@/components/Footer'
 import { useEffect, useState } from 'react'
 import MaintenanceAlert from '@/components/MaintenanceAlert'
@@ -97,12 +84,10 @@ export default function IncidentsPage() {
         <title>
           {t('Incidents')} - {pageConfig.title}
         </title>
-        <link rel="icon" href={pageConfig.favicon ?? '/favicon.png'} />
+        <link rel="icon" href={pageConfig.favicon ?? '/logo.png'} />
       </Head>
 
       <main className={inter.className} style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
-        <Header />
-
         <Container size="md" pb="xl" style={{ minHeight: '60vh' }}>
           <Stack gap="lg">
             <Group justify="space-between" align="center">

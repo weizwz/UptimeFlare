@@ -1,18 +1,8 @@
-import {
-  Card,
-  Group,
-  Text,
-  Badge,
-  Tooltip,
-  ThemeIcon,
-  RingProgress,
-  Center,
-  Stack,
-  Box,
-} from '@mantine/core'
+import { Tooltip } from '@mantine/core'
+import { IconCloud } from '@tabler/icons-react'
 import { MonitorTarget, MonitorState } from '@/types/config'
 import { useTranslation } from 'react-i18next'
-import { IconCheck, IconX, IconActivity, IconServer } from '@tabler/icons-react'
+import Image from 'next/image'
 
 export default function MonitorCard({
   monitor,
@@ -36,7 +26,9 @@ export default function MonitorCard({
   // Calculate uptime bars (last 30 days)
   const uptimeBars = []
   const currentTime = Math.round(Date.now() / 1000)
-  const montiorStartTime = state.incident[monitor.id][0].start[0]
+  const montiorStartTime = state.incident[monitor.id]
+    ? state.incident[monitor.id][0].start[0]
+    : currentTime
   const todayStart = new Date()
   todayStart.setHours(0, 0, 0, 0)
 
@@ -45,28 +37,38 @@ export default function MonitorCard({
     return Math.max(0, Math.min(x2, y2) - Math.max(x1, y1))
   }
 
+  let totalMonitorTime = 0
+  let totalDownTime = 0
+
   for (let i = 29; i >= 0; i--) {
     const dayStart = Math.round(todayStart.getTime() / 1000) - i * 86400
     const dayEnd = dayStart + 86400
     const dayMonitorTime = overlapLen(dayStart, dayEnd, montiorStartTime, currentTime)
     let dayDownTime = 0
 
-    for (let incident of state.incident[monitor.id]) {
-      const incidentStart = incident.start[0]
-      const incidentEnd = incident.end ?? currentTime
-      const overlap = overlapLen(dayStart, dayEnd, incidentStart, incidentEnd)
-      dayDownTime += overlap
+    if (state.incident[monitor.id]) {
+      for (let incident of state.incident[monitor.id]) {
+        const incidentStart = incident.start[0]
+        const incidentEnd = incident.end ?? currentTime
+        const overlap = overlapLen(dayStart, dayEnd, incidentStart, incidentEnd)
+        dayDownTime += overlap
+      }
+    }
+
+    if (dayMonitorTime > 0) {
+      totalMonitorTime += dayMonitorTime
+      totalDownTime += dayDownTime
     }
 
     const dayPercent =
       dayMonitorTime === 0 ? -1 : ((dayMonitorTime - dayDownTime) / dayMonitorTime) * 100
 
     // Determine color based on uptime
-    let barColor = 'var(--mantine-color-gray-3)' // No data
-    if (dayPercent === 100) barColor = 'var(--mantine-color-teal-5)'
-    else if (dayPercent >= 98) barColor = 'var(--mantine-color-teal-3)'
-    else if (dayPercent >= 95) barColor = 'var(--mantine-color-yellow-5)'
-    else if (dayPercent >= 0) barColor = 'var(--mantine-color-red-5)'
+    let barColor = 'bg-gray-200' // gray-200 for No data
+    if (dayPercent === 100) barColor = 'bg-emerald-400' // emerald-500
+    else if (dayPercent >= 98) barColor = 'bg-emerald-300' // emerald-400
+    else if (dayPercent >= 95) barColor = 'bg-amber-400' // amber-500
+    else if (dayPercent >= 0) barColor = 'bg-rose-500' // red-500
 
     uptimeBars.push(
       <Tooltip
@@ -78,82 +80,115 @@ export default function MonitorCard({
         }
         position="top"
         withArrow
-        transitionProps={{ transition: 'pop-bottom-left' }}
+        transitionProps={{ transition: 'pop', duration: 200 }}
       >
-        <Box
-          style={{
-            width: 6,
-            height: 24,
-            backgroundColor: barColor,
-            borderRadius: 4,
-            opacity: 0.8,
-            transition: 'opacity 0.2s',
-            cursor: 'default',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.8')}
-        />
+        <div className={`w-1.5 h-6 rounded-sm ${barColor} hover:opacity-80 transition-opacity`} />
       </Tooltip>
     )
   }
 
+  // Format latency time ago
+  const formatTimeAgo = (timestamp: number) => {
+    const seconds = Math.floor(Date.now() / 1000 - timestamp)
+    if (seconds < 60) return `${seconds}s`
+    const minutes = Math.floor(seconds / 60)
+    if (minutes < 60) return `${minutes}m`
+    const hours = Math.floor(minutes / 60)
+    return `${hours}h`
+  }
+
+  // Last update time (mocked for now based on state.lastUpdate or specific monitor usage)
+  const timeInfo = state.lastUpdate ? formatTimeAgo(state.lastUpdate) : 'now'
+
+  const totalPercent =
+    totalMonitorTime > 0
+      ? (((totalMonitorTime - totalDownTime) / totalMonitorTime) * 100).toFixed(2)
+      : '0.00'
+
   return (
-    <Card
-      shadow="sm"
-      padding="lg"
-      radius="md"
-      withBorder
-      style={{
-        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-        cursor: 'pointer',
+    <div
+      className="group relative flex flex-col bg-white dark:bg-zinc-900 rounded-3xl shadow-md shadow-slate-200 hover:shadow-xl hover:shadow-slate-200/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300 border border-slate-200 dark:border-zinc-800 cursor-pointer overflow-hidden"
+      onClick={() => {
+        if (monitor.statusPageLink) window.open(monitor.statusPageLink, '_blank')
       }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px)'
-        e.currentTarget.style.boxShadow = 'var(--mantine-shadow-md)'
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.boxShadow = 'var(--mantine-shadow-sm)'
-      }}
-      onClick={() => (window.location.href = monitor.statusPageLink || '#')}
     >
-      <Group justify="space-between" mb="md" align="flex-start">
-        <Group gap="sm">
-          <ThemeIcon variant="light" size="lg" color={status === 'up' ? 'teal' : 'red'} radius="md">
-            {status === 'up' ? <IconCheck size={20} /> : <IconX size={20} />}
-          </ThemeIcon>
-          <div>
-            <Text fw={700} size="lg" lh={1.2}>
-              {monitor.name}
-            </Text>
-            <Text size="xs" c="dimmed" mt={2}>
-              {monitor.target}
-            </Text>
+      {/* Preview Image Area */}
+      <div className="w-full aspect-video max-h-40 p-5 bg-white dark:bg-zinc-800 overflow-hidden">
+        <div className="relative w-full h-full overflow-hidden rounded-lg dark:bg-zinc-800">
+          {monitor.preview ? (
+            <Image
+              src={monitor.preview}
+              alt={monitor.name}
+              fill
+              className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex items-center justify-center w-full h-full text-slate-200 dark:text-zinc-700">
+              <IconCloud size={64} stroke={1} className="mt-10" />
+            </div>
+          )}
+        </div>
+
+        {/* Status Badge - Overlay on Image */}
+        <div className="absolute top-3 right-3">
+          <div
+            className={`
+              flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase backdrop-blur-md shadow-sm border border-white/10
+              ${status === 'up' ? 'bg-emerald-500/90 text-white' : 'bg-rose-500/90 text-white'}
+            `}
+          >
+            <div className={`w-2 h-2 rounded-full bg-white animate-pulse`} />
+            {status === 'up' ? t('Operational') : t('Down')}
           </div>
-        </Group>
+        </div>
 
-        <Badge color={status === 'up' ? 'teal' : 'red'} variant="dot" size="lg" radius="md">
-          {status === 'up' ? t('Operational') : t('Down')}
-        </Badge>
-      </Group>
+        {/* Header Info - Overlay on Image (Top Left) */}
+        <div className="absolute top-3 left-3 max-w-[calc(100%-140px)] rounded-xl overflow-hidden">
+          <div className="flex flex-col">
+            <h3 className="w-fit font-bold text-sm leading-tight px-2 py-1 backdrop-blur-[2px] rounded-tr-xl bg-white/60">
+              {monitor.name}
+            </h3>
+            {monitor.target && (
+              <div className="text-[10px] font-mono text-gray-700 px-2 py-0.5 backdrop-blur-[2px] rounded-r-full bg-white/60">
+                {new URL(monitor.target).hostname}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      {/* Content Area */}
+      <div className="p-5 pt-0 flex flex-col flex-1 gap-4">
+        {/* Uptime Bars */}
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between text-xs font-medium text-slate-400">
+            <span>30d check</span>
+            <span>{totalPercent}% uptime</span>
+          </div>
+          <div className="flex items-end justify-between gap-[3px] h-8 opacity-80">
+            {uptimeBars}
+          </div>
+        </div>
 
-      <Group gap={4} mt="lg" justify="space-between" align="flex-end">
-        <Group gap={2} style={{ flex: 1 }}>
-          {uptimeBars}
-        </Group>
-
-        <Stack gap={0} align="flex-end">
-          <Text size="xs" c="dimmed" fw={700} tt="uppercase">
-            {t('Response')}
-          </Text>
-          <Group gap={4} align="center">
-            <IconActivity size={14} style={{ opacity: 0.5 }} />
-            <Text fw={700} size="sm" c={lastLatency && lastLatency > 500 ? 'yellow' : 'dimmed'}>
+        {/* Footer */}
+        <div className="flex justify-between items-center text-xs text-slate-400 font-medium mt-auto pt-4 border-t border-slate-100 dark:border-zinc-800/50">
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span>{t('check_label', { defaultValue: 'Checked' })}</span>
+            <span className="text-slate-500">{timeInfo} ago</span>
+          </div>
+          <div className="flex items-center gap-1 bg-slate-50 dark:bg-zinc-800 px-2 py-1 rounded-md">
+            <span
+              className={`font-bold font-mono ${
+                lastLatency && lastLatency > 500
+                  ? 'text-amber-500'
+                  : 'text-slate-600 dark:text-slate-400'
+              }`}
+            >
               {lastLatency ? `${lastLatency}ms` : '-'}
-            </Text>
-          </Group>
-        </Stack>
-      </Group>
-    </Card>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
