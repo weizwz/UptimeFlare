@@ -215,9 +215,9 @@ export default function MonitorCard({
       >
         {modelContent}
       </Modal>
-      <div className="group relative flex flex-col bg-white dark:bg-zinc-900 rounded-3xl shadow-md shadow-slate-200 hover:shadow-xl hover:shadow-slate-200/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300 border border-slate-200 dark:border-zinc-800 overflow-hidden">
+      <div className="group relative p-5 flex flex-col bg-white dark:bg-zinc-900 rounded-3xl shadow-md shadow-slate-200 hover:shadow-xl hover:shadow-slate-200/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300 border border-slate-200 dark:border-zinc-800 overflow-hidden">
         {/* Preview Image Area */}
-        <div className="w-full aspect-video max-h-40 p-5 bg-white dark:bg-zinc-800 overflow-hidden">
+        <div className="w-full aspect-video max-h-40 bg-white dark:bg-zinc-800 overflow-hidden mb-4">
           <div className="relative w-full h-full overflow-hidden rounded-lg dark:bg-zinc-800">
             {monitor.preview ? (
               <Image
@@ -228,7 +228,7 @@ export default function MonitorCard({
               />
             ) : (
               <div className="flex items-center justify-center w-full h-full text-slate-200 dark:text-zinc-700">
-                <IconCloud size={64} stroke={1} className="mt-10" />
+                <IconCloud size={64} stroke={1} className="mt-6" />
               </div>
             )}
           </div>
@@ -247,26 +247,28 @@ export default function MonitorCard({
           </div>
 
           {/* Header Info - Overlay on Image (Top Left) */}
-          <div className="absolute top-3 left-3 max-w-[calc(100%-140px)] rounded-xl overflow-hidden">
-            <a
-              href={monitor.statusPageLink}
-              target="_blank"
-              className="flex flex-col cursor-pointer hover:text-emerald-500"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h3 className="w-fit font-bold text-sm leading-tight px-2 py-1 backdrop-blur-[2px] rounded-tr-xl bg-white/60">
-                {monitor.name}
-              </h3>
-              {monitor.target && (
-                <div className="text-[10px] font-mono text-gray-700 px-2 py-0.5 backdrop-blur-[2px] rounded-r-full bg-white/60 w-fit">
-                  {new URL(monitor.target).hostname}
-                </div>
-              )}
-            </a>
+          <div className="absolute top-3 left-3 max-w-[calc(100%-140px)] px-2 py-1 bg-white/80 backdrop-blur-[2px] rounded-full overflow-hidden">
+            {monitor.statusPageLink ? (
+              <a
+                href={monitor.statusPageLink}
+                target="_blank"
+                className="flex flex-col cursor-pointer hover:text-emerald-500"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 className="w-fit font-bold text-sm leading-tight">{monitor.name}</h3>
+                {monitor.target && (
+                  <div className="text-[10px] font-mono text-gray-700">
+                    {new URL(monitor.target).hostname}
+                  </div>
+                )}
+              </a>
+            ) : (
+              <h3 className="w-fit font-bold text-sm leading-tight">{monitor.name}</h3>
+            )}
           </div>
         </div>
         {/* Content Area */}
-        <div className="p-5 pt-0 flex flex-col flex-1 gap-4">
+        <div className="flex flex-col flex-1 gap-4">
           {/* Uptime Bars */}
           <div className="flex flex-col gap-2">
             <div className="flex justify-between text-xs font-medium text-slate-400">

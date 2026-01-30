@@ -31,8 +31,7 @@ export default function MonitorList({
   const getGroupIcon = (groupName: string) => {
     if (groupName.includes('AI')) return IconCloud
     if (groupName.includes('工具')) return IconApps
-    if (groupName.includes('其他')) return IconDeviceDesktop
-    return IconServer
+    return IconDeviceDesktop
   }
 
   return (

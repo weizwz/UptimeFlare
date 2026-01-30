@@ -56,7 +56,7 @@ const workerConfig: WorkerConfig = {
     // },
     {
       id: 'weiwz',
-      name: '唯知主页',
+      name: '主页',
       method: 'HEAD',
       target: 'https://weizwz.com/',
       statusPageLink: 'https://weizwz.com/',
@@ -68,7 +68,7 @@ const workerConfig: WorkerConfig = {
     },
     {
       id: 'blog',
-      name: '唯知笔记',
+      name: '博客',
       method: 'HEAD',
       target: 'https://note.weizwz.com/',
       statusPageLink: 'https://note.weizwz.com/',
@@ -80,10 +80,9 @@ const workerConfig: WorkerConfig = {
     },
     {
       id: 'picture',
-      name: '个人图床',
+      name: '图床',
       method: 'HEAD',
-      target: 'https://p.weizwz.com/',
-      statusPageLink: 'https://p.weizwz.com/',
+      target: 'https://p.weizwz.com/favicon.ico',
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
@@ -91,7 +90,7 @@ const workerConfig: WorkerConfig = {
     },
     {
       id: 'nav',
-      name: '导航',
+      name: '唯知导航',
       method: 'HEAD',
       target: 'https://nav.weizwz.com/',
       statusPageLink: 'https://nav.weizwz.com/',
@@ -99,7 +98,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '其他项目',
+      group: '实用工具',
     },
     {
       id: 'cover',
@@ -111,7 +110,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '其他项目',
+      group: '实用工具',
     },
     {
       id: 'fun_animation',
@@ -123,7 +122,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '其他项目',
+      group: '演示项目',
     },
     {
       id: 'charts',
@@ -135,7 +134,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
-      group: '其他项目',
+      group: '演示项目',
     },
   ],
   notification: {
