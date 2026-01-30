@@ -116,8 +116,9 @@ export default function OverallStatus({
       <div className="mt-2 flex items-center justify-center gap-2 text-sm text-gray-400">
         <IconActivity size={14} />
         <span>
-          {t('Last updated: {{time}}', {
-            time: new Date(state.lastUpdate * 1000).toLocaleString(),
+          {t('Last updated on', {
+            date: new Date(state.lastUpdate * 1000).toLocaleString(),
+            seconds: Math.floor(currentTime - state.lastUpdate),
           })}
         </span>
       </div>
