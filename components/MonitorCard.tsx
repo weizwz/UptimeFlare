@@ -45,6 +45,20 @@ export default function MonitorCard({
     return Math.max(0, Math.min(x2, y2) - Math.max(x1, y1))
   }
 
+  const formatDuration = (seconds: number) => {
+    const d = Math.floor(seconds / 86400)
+    const h = Math.floor((seconds % 86400) / 3600)
+    const m = Math.floor((seconds % 3600) / 60)
+    const s = Math.floor(seconds % 60)
+
+    const parts = []
+    if (d > 0) parts.push(`${d}d`)
+    if (h > 0) parts.push(`${h}h`)
+    if (m > 0) parts.push(`${m}m`)
+    if (s > 0) parts.push(`${s}s`)
+    return parts.join(' ') || '0s'
+  }
+
   let totalMonitorTime = 0
   let totalDownTime = 0
 
@@ -117,7 +131,7 @@ export default function MonitorCard({
             {dayDownTime > 0 && (
               <Text size="xs" c="red.2" fw={700}>
                 {t('Down for', {
-                  duration: moment.preciseDiff(moment(0), moment(dayDownTime * 1000)),
+                  duration: formatDuration(dayDownTime),
                 })}
               </Text>
             )}
@@ -143,7 +157,7 @@ export default function MonitorCard({
                   <div className="text-sm text-slate-500 mb-2">
                     {t('Total downtime')}:{' '}
                     <span className="font-semibold text-rose-500">
-                      {moment.preciseDiff(moment(0), moment(dayDownTime * 1000))}
+                      {formatDuration(dayDownTime)}
                     </span>
                   </div>
                   {incidentReasons.map((reason, index) => (
