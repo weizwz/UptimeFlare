@@ -1,21 +1,10 @@
 import { MaintenanceConfig, MonitorTarget } from '@/types/config'
 import { Collapse } from '@mantine/core'
 import { IconCheck, IconX, IconAlertCircle, IconActivity } from '@tabler/icons-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import MaintenanceAlert from './MaintenanceAlert'
-import { pageConfig } from '@/uptime.config'
 import { useTranslation } from 'react-i18next'
 import Image from 'next/image'
-
-function useWindowVisibility() {
-  const [isVisible, setIsVisible] = useState(true)
-  useEffect(() => {
-    const handleVisibilityChange = () => setIsVisible(document.visibilityState === 'visible')
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [])
-  return isVisible
-}
 
 export default function OverallStatus({
   state,
@@ -27,49 +16,31 @@ export default function OverallStatus({
   monitors: MonitorTarget[]
 }) {
   const { t } = useTranslation('common')
-  let group = pageConfig.group
-  let groupedMonitor = (group && Object.keys(group).length > 0) || false
 
   let statusString = ''
   let statusColor = 'gray'
   let StatusIcon = IconAlertCircle
-  let heroText = 'UNKNOWN STATUS'
 
   if (state.overallUp === 0 && state.overallDown === 0) {
     statusString = t('No data yet')
     statusColor = 'text-gray-400'
-    heroText = 'NO DATA'
   } else if (state.overallUp === 0) {
     statusString = t('All systems not operational')
     statusColor = 'text-red-500'
     StatusIcon = IconX
-    heroText = 'SYSTEM OUTAGE'
   } else if (state.overallDown === 0) {
     statusString = t('All systems operational')
     statusColor = 'text-emerald-500'
     StatusIcon = IconCheck
-    heroText = 'ALL SYSTEMS GO'
   } else {
     statusString = t('Some systems not operational', {
       down: state.overallDown,
       total: state.overallUp + state.overallDown,
     })
     statusColor = 'text-yellow-500'
-    heroText = 'PARTIAL OUTAGE'
   }
 
-  const [openTime] = useState(Math.round(Date.now() / 1000))
-  const [currentTime, setCurrentTime] = useState(Math.round(Date.now() / 1000))
-  const isWindowVisible = useWindowVisibility()
   const [expandUpcoming, setExpandUpcoming] = useState(false)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isWindowVisible) return
-      setCurrentTime(Math.round(Date.now() / 1000))
-    }, 1000)
-    return () => clearInterval(interval)
-  })
 
   const now = new Date()
 
@@ -118,7 +89,6 @@ export default function OverallStatus({
         <span>
           {t('Last updated on', {
             date: new Date(state.lastUpdate * 1000).toLocaleString(),
-            seconds: Math.floor(currentTime - state.lastUpdate),
           })}
         </span>
       </div>

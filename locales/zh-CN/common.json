@@ -4,7 +4,7 @@
   "All systems not operational": "所有服务均离线",
   "All systems operational": "所有服务运行正常",
   "Some systems not operational": "部分服务离线 ({{down}} / {{total}})",
-  "Last updated on": "最后更新于: {{date}} ({{seconds}} 秒前)",
+  "Last updated on": "最后更新于: {{date}}",
   "upcoming maintenance": "{{count}} 个即将进行的维护",
   "upcoming maintenance_plural": "{{count}} 个即将进行的维护",
   "Hide": "[隐藏]",

@@ -4,7 +4,7 @@
   "All systems not operational": "All systems not operational",
   "All systems operational": "All systems operational",
   "Some systems not operational": "Some systems not operational ({{down}} out of {{total}})",
-  "Last updated on": "Last updated on: {{date}} ({{seconds}} sec ago)",
+  "Last updated on": "Last updated on: {{date}}",
   "upcoming maintenance": "{{count}} upcoming maintenance",
   "upcoming maintenance_plural": "{{count}} upcoming maintenances",
   "Hide": "[Hide]",

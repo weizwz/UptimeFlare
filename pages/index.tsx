@@ -30,7 +30,7 @@ export default function Home({
   )
 
   useEffect(() => {
-    // Polling for status updates every 60 seconds
+    // Polling for status updates every 180 seconds
     const interval = setInterval(async () => {
       try {
         const res = await fetch('/api/status')
@@ -42,7 +42,7 @@ export default function Home({
       } catch (error) {
         console.error('Failed to update status:', error)
       }
-    }, 60 * 1000)
+    }, 180 * 1000)
 
     return () => clearInterval(interval)
   }, [])
