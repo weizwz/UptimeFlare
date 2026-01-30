@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="flex items-center gap-1">
             <span className="font-medium">本站使用</span>
             <a
-              href="https://github.com/lyc8503/UptimeFlare"
+              href="https://github.com/weizwz/UptimeFlare"
               target="_blank"
               className="hover:text-emerald-500 transition-colors"
             >

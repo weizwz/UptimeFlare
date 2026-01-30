@@ -1,6 +1,7 @@
 import Head from 'next/head'
 
 import { Inter } from 'next/font/google'
+import { useEffect, useState } from 'react'
 import { MonitorTarget } from '@/types/config'
 import { maintenances, pageConfig, workerConfig } from '@/uptime.config'
 import OverallStatus from '@/components/OverallStatus'
@@ -24,7 +25,27 @@ export default function Home({
   statusPageLink?: string
 }) {
   const { t } = useTranslation('common')
-  let state = new CompactedMonitorStateWrapper(compactedStateStr).uncompact()
+  const [state, setState] = useState(() =>
+    new CompactedMonitorStateWrapper(compactedStateStr).uncompact()
+  )
+
+  useEffect(() => {
+    // Polling for status updates every 60 seconds
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/status')
+        const data = (await res.json()) as { compactedStateStr: string }
+        if (data.compactedStateStr) {
+          const newState = new CompactedMonitorStateWrapper(data.compactedStateStr).uncompact()
+          setState(newState)
+        }
+      } catch (error) {
+        console.error('Failed to update status:', error)
+      }
+    }, 60 * 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   // Specify monitorId in URL hash to view a specific monitor (can be used in iframe)
   const monitorId = window.location.hash.substring(1)
