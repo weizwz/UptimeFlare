@@ -106,12 +106,7 @@ export default function MonitorCard({
       : '0.00'
 
   return (
-    <div
-      className="group relative flex flex-col bg-white dark:bg-zinc-900 rounded-3xl shadow-md shadow-slate-200 hover:shadow-xl hover:shadow-slate-200/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300 border border-slate-200 dark:border-zinc-800 cursor-pointer overflow-hidden"
-      onClick={() => {
-        if (monitor.statusPageLink) window.open(monitor.statusPageLink, '_blank')
-      }}
-    >
+    <div className="group relative flex flex-col bg-white dark:bg-zinc-900 rounded-3xl shadow-md shadow-slate-200 hover:shadow-xl hover:shadow-slate-200/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300 border border-slate-200 dark:border-zinc-800 overflow-hidden">
       {/* Preview Image Area */}
       <div className="w-full aspect-video max-h-40 p-5 bg-white dark:bg-zinc-800 overflow-hidden">
         <div className="relative w-full h-full overflow-hidden rounded-lg dark:bg-zinc-800">
@@ -144,16 +139,21 @@ export default function MonitorCard({
 
         {/* Header Info - Overlay on Image (Top Left) */}
         <div className="absolute top-3 left-3 max-w-[calc(100%-140px)] rounded-xl overflow-hidden">
-          <div className="flex flex-col">
+          <a
+            href={monitor.statusPageLink}
+            target="_blank"
+            className="flex flex-col cursor-pointer hover:text-emerald-500"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3 className="w-fit font-bold text-sm leading-tight px-2 py-1 backdrop-blur-[2px] rounded-tr-xl bg-white/60">
               {monitor.name}
             </h3>
             {monitor.target && (
-              <div className="text-[10px] font-mono text-gray-700 px-2 py-0.5 backdrop-blur-[2px] rounded-r-full bg-white/60">
+              <div className="text-[10px] font-mono text-gray-700 px-2 py-0.5 backdrop-blur-[2px] rounded-r-full bg-white/60 w-fit">
                 {new URL(monitor.target).hostname}
               </div>
             )}
-          </div>
+          </a>
         </div>
       </div>
       {/* Content Area */}
