@@ -40,7 +40,7 @@ export default function DetailBar({
     const dayMonitorTime = overlapLen(dayStart, dayEnd, montiorStartTime, currentTime)
     let dayDownTime = 0
 
-    let incidentReasons: string[] = []
+    let incidentReasons: { start: string; end: string; error: string }[] = []
 
     for (let incident of state.incident[monitor.id]) {
       const incidentStart = incident.start[0]
@@ -67,7 +67,11 @@ export default function DetailBar({
               hour: '2-digit',
               minute: '2-digit',
             })
-            incidentReasons.push(`[${startStr}-${endStr}] ${incident.error[i]}`)
+            incidentReasons.push({
+              start: startStr,
+              end: endStr,
+              error: incident.error[i],
+            })
           }
         }
       }
@@ -132,18 +136,29 @@ export default function DetailBar({
                 })
               )
               setModelContent(
-                <Stack>
+                <div className="flex flex-col gap-3">
+                  <div className="text-sm text-slate-500 mb-2">
+                    {t('Total downtime')}:{' '}
+                    <span className="font-semibold text-rose-500">
+                      {moment.preciseDiff(moment(0), moment(dayDownTime * 1000))}
+                    </span>
+                  </div>
                   {incidentReasons.map((reason, index) => (
-                    <Alert
+                    <div
                       key={index}
-                      color="red"
-                      variant="light"
-                      icon={<IconAlertTriangle size={16} />}
+                      className="flex flex-col gap-2 p-3 rounded-lg border border-slate-100 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900/50"
                     >
-                      {reason}
-                    </Alert>
+                      <div className="flex items-center gap-2">
+                        <div className="px-2 py-0.5 rounded text-xs font-mono font-medium bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400">
+                          {reason.start} - {reason.end}
+                        </div>
+                      </div>
+                      <div className="text-sm text-slate-700 dark:text-slate-300 font-mono break-all">
+                        {reason.error}
+                      </div>
+                    </div>
                   ))}
-                </Stack>
+                </div>
               )
               setModalOpened(true)
             }
