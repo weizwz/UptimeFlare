@@ -3,6 +3,9 @@ import { IconCloud } from '@tabler/icons-react'
 import { MonitorTarget, MonitorState } from '@/types/config'
 import { useTranslation } from 'react-i18next'
 import Image from 'next/image'
+import { Stack, Text } from '@mantine/core'
+const moment = require('moment')
+require('moment-precise-range-plugin')
 
 export default function MonitorCard({
   monitor,
@@ -74,15 +77,31 @@ export default function MonitorCard({
       <Tooltip
         key={i}
         label={
-          dayPercent === -1
-            ? t('No Data')
-            : `${new Date(dayStart * 1000).toLocaleDateString()}: ${dayPercent.toFixed(2)}%`
+          <Stack gap={2} p={4}>
+            <Text size="xs" fw={700}>
+              {new Date(dayStart * 1000).toLocaleDateString()}
+            </Text>
+            <Text size="xs">{dayPercent === -1 ? t('No Data') : `${dayPercent.toFixed(2)}%`}</Text>
+            {dayDownTime > 0 && (
+              <Text size="xs" c="red.2" fw={700}>
+                {t('Down for', {
+                  duration: moment.preciseDiff(moment(0), moment(dayDownTime * 1000)),
+                })}
+              </Text>
+            )}
+          </Stack>
         }
         position="top"
         withArrow
         transitionProps={{ transition: 'pop', duration: 200 }}
       >
-        <div className={`w-1.5 h-6 rounded-sm ${barColor} hover:opacity-80 transition-opacity`} />
+        <div
+          className={`w-1.5 h-6 rounded-sm ${barColor} hover:opacity-80 transition-opacity cursor-pointer`}
+          onClick={(e) => {
+            e.stopPropagation()
+            window.location.hash = `#${monitor.id}`
+          }}
+        />
       </Tooltip>
     )
   }
