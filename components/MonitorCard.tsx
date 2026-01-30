@@ -111,9 +111,9 @@ export default function MonitorCard({
         label={
           <Stack gap={2} p={4}>
             <Text size="xs" fw={700}>
-              {new Date(dayStart * 1000).toLocaleDateString()}
+              {new Date(dayStart * 1000).toLocaleDateString()} &nbsp;
+              {dayPercent === -1 ? t('No Data') : `${dayPercent.toFixed(2)}%`}
             </Text>
-            <Text size="xs">{dayPercent === -1 ? t('No Data') : `${dayPercent.toFixed(2)}%`}</Text>
             {dayDownTime > 0 && (
               <Text size="xs" c="red.2" fw={700}>
                 {t('Down for', {
