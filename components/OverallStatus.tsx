@@ -68,16 +68,21 @@ export default function OverallStatus({
 
   return (
     <div className="py-16 text-center">
-      <div className="flex justify-center items-center gap-4 mb-4">
-        <Image
-          src="/logo.png"
-          className="w-8 h-8 md:w-14 md:h-14 group-hover:scale-105 transition-transform"
-          alt="Logo"
-          width={64}
-          height={64}
-        />
-        <h1 className="text-2xl md:text-4xl font-black tracking-tight dark:text-white bg-clip-text text-transparent bg-linear-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-400">
-          WeizWz Services Status
+      <div className="flex flex-col sm:flex-row sm:gap-4 justify-center items-center mb-4">
+        <div className="flex flex-nowrap items-center gap-2">
+          <Image
+            src="/logo.png"
+            className="w-8 h-8 md:w-14 md:h-14 mb-1"
+            alt="Logo"
+            width={64}
+            height={64}
+          />
+          <h1 className="text-2xl md:text-4xl font-black text-emerald-500 tracking-tight">
+            WeizWz
+          </h1>
+        </div>
+        <h1 className="text-2xl md:text-4xl font-black tracking-tight dark:text-white">
+          Services Status
         </h1>
       </div>
       <div className={`flex items-center justify-center gap-2 text-xl font-medium ${statusColor}`}>

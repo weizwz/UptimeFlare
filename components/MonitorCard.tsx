@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next'
 import Image from 'next/image'
 import { Stack, Text, Modal } from '@mantine/core'
 import { useState } from 'react'
-const moment = require('moment')
-require('moment-precise-range-plugin')
 
 export default function MonitorCard({
   monitor,
@@ -215,7 +213,7 @@ export default function MonitorCard({
       >
         {modelContent}
       </Modal>
-      <div className="group relative p-5 flex flex-col bg-white dark:bg-zinc-900 rounded-3xl shadow-md shadow-slate-200 hover:shadow-xl hover:shadow-slate-200/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300 border border-slate-200 dark:border-zinc-800 overflow-hidden">
+      <div className="group relative p-5 flex flex-col gap-4 bg-white dark:bg-zinc-900 rounded-3xl shadow-md shadow-slate-200 hover:shadow-xl hover:shadow-slate-200/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300 border border-slate-200 dark:border-zinc-800 overflow-hidden">
         {/* Preview Image Area */}
         <div className="w-full aspect-video max-h-32 bg-white dark:bg-zinc-800 overflow-hidden mb-4">
           <div className="relative w-full h-full overflow-hidden rounded-lg dark:bg-zinc-800">
@@ -267,37 +265,34 @@ export default function MonitorCard({
             )}
           </div>
         </div>
-        {/* Content Area */}
-        <div className="flex flex-col flex-1 gap-4">
-          {/* Uptime Bars */}
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between text-xs font-medium text-slate-400">
-              <span>30d check</span>
-              <span>{totalPercent}% uptime</span>
-            </div>
-            <div className="flex items-end justify-between gap-[3px] h-8 opacity-80">
-              {uptimeBars}
-            </div>
+        {/* Uptime Bars */}
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between text-xs font-medium text-slate-400">
+            <span>30d check</span>
+            <span>{totalPercent}% uptime</span>
           </div>
+          <div className="flex items-end justify-between gap-[3px] h-6 opacity-80">
+            {uptimeBars}
+          </div>
+        </div>
 
-          {/* Footer */}
-          <div className="flex justify-between items-center text-xs text-slate-400 font-medium mt-auto pt-4 border-t border-slate-100 dark:border-zinc-800/50">
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span>{t('check_label', { defaultValue: 'Checked' })}</span>
-              <span className="text-slate-500">{timeInfo} ago</span>
-            </div>
-            <div className="flex items-center gap-1 bg-slate-50 dark:bg-zinc-800 px-2 py-1 rounded-md">
-              <span
-                className={`font-bold font-mono ${
-                  lastLatency && lastLatency > 500
-                    ? 'text-amber-500'
-                    : 'text-slate-600 dark:text-slate-400'
-                }`}
-              >
-                {lastLatency ? `${lastLatency}ms` : '-'}
-              </span>
-            </div>
+        {/* Footer */}
+        <div className="flex justify-between items-center text-xs text-slate-400 font-medium mt-auto pt-4 border-t border-slate-100 dark:border-zinc-800/50">
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span>{t('check_label', { defaultValue: 'Checked' })}</span>
+            <span className="text-slate-500">{timeInfo} ago</span>
+          </div>
+          <div className="flex items-center gap-1 bg-slate-50 dark:bg-zinc-800 px-2 py-1 rounded-md">
+            <span
+              className={`font-bold font-mono ${
+                lastLatency && lastLatency > 500
+                  ? 'text-amber-500'
+                  : 'text-slate-600 dark:text-slate-400'
+              }`}
+            >
+              {lastLatency ? `${lastLatency}ms` : '-'}
+            </span>
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="py-6 mt-16 text-center text-slate-500 text-sm">
       <div className="max-w-7xl mx-auto px-4">
         {/* Credits */}
-        <div className="font-bold flex justify-center items-center gap-6 text-xs opacity-80">
+        <div className="font-bold flex flex-col justify-center items-center gap-2 text-xs opacity-80">
           <p>
             &copy; {new Date().getFullYear()}{' '}
             <span className="font-medium">
