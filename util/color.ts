@@ -1,15 +1,15 @@
-function getColor(percent: number | string, darker: boolean): string {
-  percent = Number(percent)
-  if (percent >= 99.9) {
-    return darker ? '#059669' : '#3bd671'
-  } else if (percent >= 99) {
-    return darker ? '#3bd671' : '#9deab8'
-  } else if (percent >= 95) {
-    return '#f29030'
-  } else if (Number.isNaN(percent)) {
-    return 'gray'
+function getColor(percent: number | string): string {
+  const p = Number(percent)
+  if (Number.isNaN(p)) {
+    return 'bg-gray-200'
+  } else if (p >= 99.9) {
+    return 'bg-emerald-500'
+  } else if (p >= 98) {
+    return 'bg-emerald-300'
+  } else if (p >= 95) {
+    return 'bg-amber-400'
   } else {
-    return '#df484a'
+    return 'bg-rose-500'
   }
 }
 

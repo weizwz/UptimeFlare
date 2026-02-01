@@ -1,15 +1,8 @@
 import { Text, Tooltip, Card, Group, Badge, ThemeIcon, Stack, Box } from '@mantine/core'
 import { MonitorState, MonitorTarget } from '@/types/config'
-import {
-  IconAlertCircle,
-  IconAlertTriangle,
-  IconCheck,
-  IconX,
-  IconExternalLink,
-} from '@tabler/icons-react'
+import { IconAlertTriangle, IconCheck, IconX, IconExternalLink } from '@tabler/icons-react'
 import DetailChart from './DetailChart'
 import DetailBar from './DetailBar'
-import { getColor } from '@/util/color'
 import { maintenances } from '@/uptime.config'
 import { useTranslation } from 'react-i18next'
 

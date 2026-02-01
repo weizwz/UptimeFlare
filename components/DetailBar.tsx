@@ -123,16 +123,12 @@ export default function DetailBar({
         }
       >
         <div
-          style={{
-            height: '32px',
-            flex: 1,
-            background: getColor(dayPercent, false),
-            borderRadius: '4px',
-            margin: '0 1px',
-            opacity: 0.8,
-            transition: 'all 0.2s ease',
-            cursor: dayDownTime > 0 ? 'pointer' : 'default',
-          }}
+          className={`${getColor(
+            dayPercent
+          )} h-8 flex-1 rounded-sm mx-px opacity-80 transition-all duration-200 ease-in-out ${
+            dayDownTime > 0 ? 'cursor-pointer' : 'cursor-default'
+          }`}
+          style={{}}
           onMouseEnter={(e) => {
             e.currentTarget.style.opacity = '1'
             e.currentTarget.style.transform = 'scaleY(1.1)'
