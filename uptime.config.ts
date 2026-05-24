@@ -18,7 +18,7 @@ const pageConfig: PageConfig = {
   logo: '/logo.png',
   group: {
     基础服务: ['weiwz', 'blog', 'picture'],
-    实用工具: ['nav', 'cover'],
+    实用工具: ['nav', 'cover', 'tools'],
     演示项目: ['fun_animation', 'charts'],
   },
 }
