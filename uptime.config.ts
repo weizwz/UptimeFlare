@@ -71,6 +71,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      checkProxy: 'https://uptimeflare-proxy.vercel.app',
     },
     {
       id: 'blog',
@@ -82,6 +83,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      checkProxy: 'https://uptimeflare-proxy.vercel.app',
     },
     {
       id: 'picture',
@@ -91,6 +93,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      checkProxy: 'https://uptimeflare-proxy.vercel.app',
     },
     {
       id: 'nav',
@@ -102,6 +105,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      checkProxy: 'https://uptimeflare-proxy.vercel.app',
     },
     {
       id: 'cover',
@@ -113,6 +117,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      checkProxy: 'https://uptimeflare-proxy.vercel.app',
     },
     {
       id: 'tools',
@@ -124,6 +129,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      checkProxy: 'https://uptimeflare-proxy.vercel.app',
     },
     {
       id: 'fun_animation',
@@ -135,6 +141,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      checkProxy: 'https://uptimeflare-proxy.vercel.app',
     },
     {
       id: 'charts',
@@ -146,6 +153,7 @@ const workerConfig: WorkerConfig = {
       hideLatencyChart: false,
       expectedCodes: [200],
       timeout: 10000,
+      checkProxy: 'https://uptimeflare-proxy.vercel.app',
     },
   ],
   notification: {
